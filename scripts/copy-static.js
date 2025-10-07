@@ -3,33 +3,34 @@
 const fs = require('fs');
 const path = require('path');
 
-const sourceDir = path.resolve(__dirname, '..', 'public');
-const destDir = path.resolve(__dirname, '..', 'dist');
+const projectRoot = path.resolve(__dirname, '..');
+const destDir = path.resolve(projectRoot, 'dist');
+
+const staticFiles = ['index.html'];
 
 function copyFile(sourcePath, destPath) {
   fs.mkdirSync(path.dirname(destPath), { recursive: true });
   fs.copyFileSync(sourcePath, destPath);
 }
 
-function copyDirectory(from, to) {
-  const entries = fs.readdirSync(from, { withFileTypes: true });
-  entries.forEach((entry) => {
-    const sourcePath = path.join(from, entry.name);
-    const destPath = path.join(to, entry.name);
+fs.mkdirSync(destDir, { recursive: true });
 
-    if (entry.isDirectory()) {
-      copyDirectory(sourcePath, destPath);
-    } else if (entry.isFile()) {
-      copyFile(sourcePath, destPath);
-    }
-  });
-}
+staticFiles.forEach((relativePath) => {
+  const sourcePath = path.resolve(projectRoot, relativePath);
+  const destPath = path.resolve(destDir, relativePath);
 
-if (!fs.existsSync(sourceDir)) {
-  console.error('Static directory not found:', sourceDir);
+  if (!fs.existsSync(sourcePath)) {
+    console.error('Static asset not found:', sourcePath);
+    process.exitCode = 1;
+    return;
+  }
+
+  copyFile(sourcePath, destPath);
+});
+
+if (process.exitCode === 1) {
+  console.error('One or more static assets failed to copy.');
   process.exit(1);
 }
 
-fs.mkdirSync(destDir, { recursive: true });
-copyDirectory(sourceDir, destDir);
 console.log('Copied static assets to dist/.');
