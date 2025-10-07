@@ -19,7 +19,7 @@ This project is a minimal JavaScript single-page application scaffolded with npm
    ```bash
    npm run build
    ```
-   The output is placed in the `dist/` folder. The build script automatically copies the root HTML template.
+   The output is placed in the `dist/` folder. The build script automatically copies the static HTML template.
 
 4. Run tests:
    ```bash
@@ -44,7 +44,8 @@ This repository ships with a GitHub Actions workflow located at `.github/workflo
 ## Project Structure
 
 ```
-├── index.html          # Static HTML shell served in dev and copied on build
+├── public
+│   └── index.html       # Static HTML shell served in dev and copied on build
 ├── scripts
 │   └── copy-static.js   # Copies static assets to the dist folder after builds
 ├── src
@@ -63,5 +64,5 @@ This repository ships with a GitHub Actions workflow located at `.github/workflo
 ## Notes
 
 - The configuration keeps dependencies to a minimum: webpack for bundling, `webpack-dev-server` for local development, and Jest for unit testing.
-- Static assets (currently just `index.html`) live at the repository root so they can be served directly during development and copied during builds without additional plugins.
+- Static assets live in `public/` so they can be served directly during development without additional plugins.
 - The build process runs a lightweight Node script to copy over static assets after bundling, avoiding extra webpack plugins.
