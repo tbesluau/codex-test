@@ -1,0 +1,68 @@
+# Codex Test Web Application
+
+This project is a minimal JavaScript single-page application scaffolded with npm and webpack. It includes a very small interactive counter and a Jest test suite for core logic.
+
+## Getting Started
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm start
+   ```
+   The app is served at http://localhost:8080/.
+
+3. Build the production bundle:
+   ```bash
+   npm run build
+   ```
+   The output is placed in the `dist/` folder. The build script automatically copies the static HTML template.
+
+4. Run tests:
+   ```bash
+   npm test
+   ```
+
+## Continuous Deployment
+
+This repository ships with a GitHub Actions workflow located at `.github/workflows/ci.yml`. The workflow runs on every push and pull request to the `main` branch and does the following:
+
+1. Installs project dependencies with Node.js 20.
+2. Executes the Jest unit tests.
+3. Builds the production bundle and uploads the `dist/` directory as an artifact for GitHub Pages.
+4. Deploys the artifact to GitHub Pages when the commit lands on `main`.
+
+### Enable GitHub Pages
+
+1. Open the repository settings in GitHub and navigate to **Pages**.
+2. Set the **Source** to **GitHub Actions**. This allows the workflow to publish the site automatically.
+3. Merge a change into `main` (for example, run `npm run build` locally to verify the output and then commit). GitHub Actions will build the site and deploy it. The workflow summary shows the published URL once the deployment job finishes.
+
+## Project Structure
+
+```
+├── public
+│   └── index.html       # Static HTML shell served in dev and copied on build
+├── scripts
+│   └── copy-static.js   # Copies static assets to the dist folder after builds
+├── src
+│   ├── counter.js       # Pure logic for a simple counter widget
+│   ├── counter.test.js  # Jest tests for the counter logic
+│   └── index.js         # Application entry point wired up by webpack
+├── .gitignore
+├── package.json
+├── .github
+│   └── workflows
+│       └── ci.yml      # CI build, test, and GitHub Pages deployment workflow
+├── README.md
+└── webpack.config.js
+```
+
+## Notes
+
+- The configuration keeps dependencies to a minimum: webpack for bundling, `webpack-dev-server` for local development, and Jest for unit testing.
+- Static assets live in `public/` so they can be served directly during development without additional plugins.
+- The build process runs a lightweight Node script to copy over static assets after bundling, avoiding extra webpack plugins.
